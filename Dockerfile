@@ -1,19 +1,15 @@
-FROM python:3.11-slim
-
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.10-slim
 
 WORKDIR /app
 
+# Install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-COPY app.py .
-COPY yolov8n.pt .
+# Copy app files
+COPY . .
 
+# Expose port and run
 EXPOSE 8000
-
 CMD ["python", "app.py"]
